@@ -4,6 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 header('Content-Type: application/json');
 
+
 // 資料庫連線配置
 $host = "localhost";
 $user = "root";
