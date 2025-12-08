@@ -175,8 +175,11 @@ if ($user_data = $result->fetch_assoc()) {
 
             if ($stmt_update_record->execute()) {
                 // B. 更新 user.is_occupied 狀態為 0
-                $sql_update_user = "UPDATE user SET is_occupied = 0 WHERE user_id = ?";
-                $sql_update_user = "UPDATE user SET violation_count = 0 WHERE user_id = ?";
+                // 只需要一個變數
+                $sql_update_user = "UPDATE user 
+                                    SET is_occupied = 0, 
+                                        violation_count = 0 
+                                    WHERE user_id = ?";
                 $stmt_update_user = $mysqli->prepare($sql_update_user);
                 $stmt_update_user->bind_param("i", $user_id);
 
@@ -218,6 +221,7 @@ if ($user_data = $result->fetch_assoc()) {
     } else {
         $mysqli->rollback();
         $mysqli->close();
+        file_put_contents($txt_path, '');
         echo json_encode(['status' => 'ERROR', 'message' => '交易失敗，狀態未更新或無未出場紀錄']);
     }
 

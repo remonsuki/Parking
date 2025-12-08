@@ -38,7 +38,7 @@ class CardListener(CardObserver):
                 print("CARDID :", uid)
 
                 # ★ 寫入 txt（你可以選擇寫卡號或四碼）
-                txt_path = r"C:\xampp\htdocs\Final\parking\card_number.txt"
+                txt_path = r"card_number.txt"
                 with open(txt_path, "w", encoding="utf-8") as f:
                     f.write(uid)
 
@@ -62,7 +62,7 @@ print("等待卡片插入... 按 Ctrl+C 結束")
 #     time.sleep(1)
 
 
-FLAG_FILE_PATH = r"C:\xampp\htdocs\Final\parking\run.flag"
+FLAG_FILE_PATH = r"run.flag"
 print("等待 run.flag 存在...")
 # 修改檢查條件，使用絕對路徑
 while os.path.exists(FLAG_FILE_PATH):
