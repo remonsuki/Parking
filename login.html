@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>🔒 用戶登入</title>
+    <style>
+      /* ================================================= */
+      /* --- 全域樣式和背景 --- */
+      /* ================================================= */
+      body {
+          font-family: 'Noto Sans TC', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          margin: 0;
+          /* 使用柔和的藍色漸變背景，增加設計感 */
+          background: linear-gradient(135deg, #e0f7fa 0%, #cceeff 100%);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          color: #34495e; /* 深灰藍色文字 */
+      }
+
+      /* ================================================= */
+      /* --- 登入容器 (Login Container) --- */
+      /* ================================================= */
+      .login-container {
+          width: 100%;
+          max-width: 400px; /* 略寬一些 */
+          padding: 50px; /* 增加內邊距 */
+          background: #ffffff;
+          border-radius: 12px;
+          /* 強烈的陰影效果，讓卡片浮起 */
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15), 0 0 5px rgba(0, 0, 0, 0.05);
+          text-align: center;
+          transition: transform 0.3s ease-in-out;
+      }
+
+      .login-container:hover {
+           transform: scale(1.01);
+      }
+
+      /* --- 標題 (Heading) --- */
+      h2 {
+          margin-top: 0;
+          margin-bottom: 35px;
+          color: #007bff; /* 主題藍色 */
+          font-size: 2em;
+          font-weight: 700;
+          border-bottom: 3px solid #007bff;
+          padding-bottom: 10px;
+          display: inline-block; /* 讓底線只在文字下方 */
+      }
+
+      /* ================================================= */
+      /* --- 表單元素 (Form Elements) --- */
+      /* ================================================= */
+      label {
+          display: block;
+          text-align: left;
+          margin-top: 20px;
+          margin-bottom: 8px;
+          font-weight: 600; /* 更粗的字體 */
+          color: #2c3e50;
+          font-size: 1.05em;
+      }
+
+      /* 輸入框樣式 */
+      input[type="text"],
+      input[type="password"] {
+          width: 100%;
+          padding: 14px 18px; /* 增加高度和寬度 */
+          margin-bottom: 10px;
+          font-size: 17px;
+          border: 1px solid #ced4da; /* 柔和邊框 */
+          border-radius: 8px;
+          box-sizing: border-box;
+          background-color: #f8f9fa; /* 淺灰色背景讓輸入框更明顯 */
+          transition: border-color 0.3s, box-shadow 0.3s;
+      }
+
+      input:focus {
+          border-color: #007bff;
+          box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); /* 焦點藍色光暈 */
+          background-color: white; /* 焦點時變為白色背景 */
+          outline: none;
+      }
+
+      /* --- 登入按鈕 (Submit Button) --- */
+      input[type="submit"] {
+          width: 100%;
+          padding: 15px;
+          margin-top: 30px;
+          background: #007bff;
+          color: white;
+          border: none;
+          border-radius: 50px; /* 膠囊形狀 */
+          font-size: 1.15em;
+          font-weight: bold;
+          cursor: pointer;
+          box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+          transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+      }
+
+      input[type="submit"]:hover {
+          background-color: #0056b3;
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px rgba(0, 123, 255, 0.5);
+      }
+
+      /* --- 返回首頁連結/按鈕 --- */
+      .back-home {
+          display: block;
+          margin-top: 30px;
+      }
+
+      .back-home button {
+          background: none;
+          color: #6c757d;
+          border: 1px solid #ced4da; /* 添加邊框 */
+          padding: 10px 20px;
+          font-size: 15px;
+          cursor: pointer;
+          border-radius: 50px;
+          transition: all 0.3s;
+      }
+
+      .back-home button:hover {
+          color: #007bff;
+          border-color: #007bff;
+          background-color: #f0f8ff; /* 懸停時淺藍色背景 */
+          text-decoration: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="login-container">
+      <h2>🔑 用戶登入</h2>
+      <form method="post" action="login_process.php">
+        <label for="student_id">🎓 學號/帳號:</label>
+        <input type="text" id="student_id" name="student_id" required placeholder="請輸入您的學號或帳號" /><br />
+
+        <label for="password">🔒 密碼:</label>
+        <input type="password" id="password" name="password" required placeholder="請輸入密碼" /><br />
+
+        <input type="submit" value="立即登入" />
+      </form>
+
+      <a href="index.html" class="back-home">
+        <button>← 返回首頁</button>
+      </a>
+    </div>
+  </body>
+</html>
