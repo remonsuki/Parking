@@ -84,7 +84,7 @@ if (!$user_info) {
     exit;
 }
 
-// 5. 連線到 MongoDB 並讀取照片
+// 5. 連線到 MongoDB 並讀取照片 (使用 GridFS)
 $photo_base64_uri = null;
 $plate_id = $user_info['plate_id'] ?? null;
 
@@ -93,32 +93,44 @@ if (!empty($plate_id)) {
     require __DIR__ . '/vendor/autoload.php';
     try {
         $mongoClient = new MongoDB\Client('mongodb://localhost:27017');
-        // 使用者提供的資料庫和集合名稱
-        $mongoCollection = $mongoClient->parkingNoSqldb->parkingdb;
+        $database = $mongoClient->parkingNoSqldb;
 
-        // 查詢 MongoDB，尋找 plate 欄位匹配的文檔
+        // 1. 查詢 parkingdb Collection 取得 GridFS 的 ObjectId
+        $mongoCollection = $database->parkingdb;
         $mongo_result = $mongoCollection->findOne(['plate' => $plate_id]);
 
-        if ($mongo_result && isset($mongo_result['photo'])) {
-            // 假設 'photo' 欄位儲存了 Base64 編碼的圖片字串
-            $photo_base64 = (string) $mongo_result['photo'];
+        // 檢查 photo 欄位是否存在且為 ObjectId 類型 (GridFS ID)
+        if ($mongo_result && isset($mongo_result['photo']) && $mongo_result['photo'] instanceof MongoDB\BSON\ObjectId) {
 
-            // 處理 Base64 數據並組合成 Data URI
-            // 假設圖片類型為 image/jpeg，如果圖片包含 MIME 資訊，則優先解析
-            $mime_type = 'image/jpeg';
-            $photo_data = $photo_base64;
+            $gridfs_id = $mongo_result['photo']; // 取得 GridFS ID
 
-            // 檢查 Base64 字串是否包含 Data URI 前綴 (如 data:image/jpeg;base64,...)
-            if (preg_match('/^data:(image\/(?:png|jpeg|gif|bmp|webp));base64,(.*)$/', $photo_base64, $matches)) {
-                $mime_type = $matches[1];
-                $photo_data = $matches[2]; // 只取 Base64 數據部分
+            // 2. 獲取 GridFS Bucket
+            $bucket = $database->selectGridFSBucket();
+
+            // 3. 使用 GridFS ID 讀取圖片數據流
+            $stream = $bucket->openDownloadStream($gridfs_id);
+
+            // 4. 讀取數據流的內容
+            $photo_binary_data = stream_get_contents($stream);
+
+            // 5. 關閉數據流
+            fclose($stream);
+
+            if ($photo_binary_data !== FALSE) {
+                // 6. 將二進制數據編碼為 Base64
+                $photo_base64 = base64_encode($photo_binary_data);
+
+                // 7. 為了顯示，組合成 Data URI (我們假設它是一個 JPEG 圖片)
+                // 註：更嚴謹的作法應從 GridFS 的 metadata 取得 MIME 類型
+                $mime_type = 'image/jpeg';
+
+                $photo_base64_uri = "data:{$mime_type};base64,{$photo_base64}";
             }
-
-            $photo_base64_uri = "data:{$mime_type};base64,{$photo_data}";
         }
+
     } catch (Exception $e) {
         error_log("MongoDB Error: " . $e->getMessage());
-        $update_message .= "<p style='color:orange; font-size:14px;'>⚠️ MongoDB 連線或讀取失敗。</p>";
+        $update_message .= "<p style='color:orange; font-size:14px;'>⚠️ MongoDB 連線或讀取 GridFS 失敗。</p>";
     }
 }
 ?>

@@ -278,7 +278,7 @@ $LOT_ID = 1;
 
                         setTimeout(() => {
                             window.location.href = redirectURL;
-                        }, 500);
+                        }, 500);    //顯示時間
 
                     } else if (data.status === 'NO_CARD') {
                         statusDisplay.textContent = "請將卡片放置於讀卡機上...";

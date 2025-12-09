@@ -227,7 +227,6 @@ if ($user_data = $result->fetch_assoc()) {
 
 } else {
     // 找不到卡號對應的用戶 (NOT_REGISTERED)
-
     // ✨ 修正：清空卡號檔案，避免卡號持續停留
     file_put_contents($txt_path, '');
 
